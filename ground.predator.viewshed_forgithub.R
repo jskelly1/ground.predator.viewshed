@@ -72,9 +72,9 @@ ground.predator.viewshed <- function(buffersize,observer,dsm,dtm,obs_h,pred_h){
   }
   
   # Check: ground.predator.viewshed.load function is loaded
-  if (!exists("ground.predator.viewshed.load")) {
-    stop("Error: ground.predator.viewshed.load function is not loaded.")
-  }
+  #if (!exists("ground.predator.viewshed.load")) {
+  #  stop("Error: ground.predator.viewshed.load function is not loaded.")
+  #}
   
   # Check: dtm and dsm must be stackable
   if (!terra::compareGeom(dtm, dsm, stopOnError = FALSE)) {
@@ -126,4 +126,5 @@ ground.predator.viewshed <- function(buffersize,observer,dsm,dtm,obs_h,pred_h){
   r <- rast(viewshed, extent = ex, crs = cr) %>% mask(buffer_poly)
   print("Success.")
   return(r)
+
 }
