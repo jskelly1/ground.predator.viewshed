@@ -2,12 +2,6 @@
 #include <vector>
 #include <cmath>
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
-// [[Rcpp::plugins(openmp)]]
-
 using namespace Rcpp;
 
 std::vector<std::pair<int, int>> bresenhamLine(int x1, int y1, int x2, int y2) {
@@ -50,9 +44,6 @@ NumericMatrix computeViewshedOptimized(NumericMatrix dsm, NumericMatrix dtm,
   // Observer elevation based on TERRAIN (DTM) + observer height
   double observer_elev = dtm(cx, cy) + obs_height;
 
-#ifdef _OPENMP
-  #pragma omp parallel for collapse(2)
-#endif
   for (int tx = 0; tx < nrow; ++tx) {
     for (int ty = 0; ty < ncol; ++ty) {
       if (tx == cx && ty == cy) {
@@ -104,4 +95,5 @@ NumericMatrix computeViewshedOptimized(NumericMatrix dsm, NumericMatrix dtm,
 
   return viewshed;
 }
+
 
