@@ -19,6 +19,7 @@ require(tidyverse)
 require(sf)
 require(terra)
 require(mapview)
+
 #for movement work
 require(lubridate)
 require(devtools)
@@ -26,6 +27,7 @@ require(devtools)
 require(MoveTools)
 require(doParallel)
 require(foreach)
+
 #for viewshed
 custom_cpp <-  'https://raw.githubusercontent.com/jskelly1/ground.predator.viewshed/refs/heads/main/ground.predator.viewshed_forgithub.R'
 source(custom_cpp)
@@ -38,6 +40,7 @@ require(MASS)
 #require(caret) #masks cluster from survival, kept off unless needed
 require(survival)
 require(AICcmodavg)
+
 #plotting
 require(patchwork)
 require(broom.mixed)
@@ -415,8 +418,6 @@ saveRDS(data_sensitivity, "./Class/project/input_data/data_sensitvity.rds")
 
 #or
 data_sensitivity <-  readRDS("./Class/project/input_data/data_sensitvity.rds")
-
-#w
 ## ------------------------------------------------------------------------------------------
 #Then create SRS of lidar area to calculate viewsheds and compare landscape patterns to TPI etc accounting for cover
 bounds_steady <- st_as_sf(bounds_steady)
@@ -612,9 +613,8 @@ model.sel(roughness_biomass_model,
           view_biomass_rough_lgdsm_model,
           view_biomass_rough_lgdtm_model,
           rank="AIC")
-#Dsm is better than terrain alone, and terrain viewscape is barely better than biomass alone...
-#Now account for roughness and biomass to better account for biomass and available escape terrain to confirm
 #========================================================
+#Ad-Hoc part inserted here to add 30m tree cover into AICc table.
 data$treecov.st <- scale(data$treecov)
 treecov_model <-  clogit(case ~ dist + log(dist) + BAFG.st + roughness.st + treecov.st +
                                             strata(strata) + cluster(id_yr_seas), 
@@ -656,8 +656,7 @@ modnames <- c("Intercept only",
 a.test <- aictab(cand.set = cand.set.test, modnames = modnames)
 write.csv(a.test, "a_test.csv")
 #========================================================
-#========================================================
-#Appendix analysis using the 1,000 sample
+#Appendix analysis using the 1,000 sample to test changes across scale (ie sensitvitiy)
 data_sensitivity$dist[data_sensitivity$dist == 0] <- 0.0000001
 data_sensitivity <- data_sensitivity %>%
   sf::st_drop_geometry()
@@ -742,18 +741,6 @@ write.csv(a, "a.csv")
 #And AIC tables
 #Pairwise table of variables
 
-
-new_data <- data.frame(
-  dist = mean(data$dist),
-  BAFG.st = mean(data$BAFG.st),
-  p_view_lgdsm.st = seq(min(data$p_view_lgdsm.st), max(data$p_view_lgdsm.st), length.out = 100),
-  strata = data$strata[1], 
-  id_yr_seas = data$id_yr_seas[1]
-)
-
-pred <- predict(view_biomass_lgdsm_model, newdata = new_data, type = "risk")
-plot(new_data$p_view_lgdsm.st, pred, type = "l", xlab = "Viewshed", ylab = "Predicted Probability")
-#========================================================
 #Get some summary stats for paper
 used <-  data %>% filter(case==1)
 avail <-  data %>% filter(case==0)
@@ -793,8 +780,6 @@ pos <- position_jitterdodge(
   jitter.width = 0, 
   dodge.width = 0.1  
 )
-
-# Define custom colors, making sure the names match the `term` values
 custom_colors <- c(
   "BAFG.st" = "cadetblue",
   "dist" = "darkorange3",
@@ -802,8 +787,6 @@ custom_colors <- c(
   "p_view_lgdsm.st" = "tomato1",
   "roughness.st" = "slateblue"
 )
-
-# Define the custom order of legend items using the `term` names
 custom_order <- c("roughness.st", "p_view_lgdsm.st", "log(dist)", "dist", "BAFG.st")
 
 ggplot(coeffs, aes(x = estimate, y = term, color = term)) +
@@ -812,7 +795,7 @@ ggplot(coeffs, aes(x = estimate, y = term, color = term)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
   scale_color_manual(
     values = custom_colors,
-    breaks = custom_order, # Use the `breaks` argument to set the order
+    breaks = custom_order,
     labels = c(
       "roughness.st" = "Roughness scaled",
       "p_view_lgdsm.st" = "Total area viewed (DSM) scaled",
@@ -862,6 +845,7 @@ url <- paste0("https://api.telegram.org/bot", token, "/sendMessage?chat_id=", ch
 httr::GET(url)
 #========================================================
 #Appendix
+#Adapt Merkle MoveTools function to work on a single core (this was run on a HPC)
 DrawRandSteps_emperical_custom <- function (data = data, nr = 10, distMax = Inf, simult = FALSE, 
           id_name = "id", date_name = "date", x_name = "x", y_name = "y", 
           withinID = FALSE, uniform.angles = FALSE) 
