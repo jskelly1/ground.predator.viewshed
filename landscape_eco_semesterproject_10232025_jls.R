@@ -2,7 +2,7 @@
 #Jayden Skelly, MS student, Montana State University, jaydenskelly@montana.edu, Fall 2025
 ## ------------------------------------------------------------------------------------------
 #This script companions my final project and presentation examining whether viewsheds can improve
-#behavioral ecology movement modeling in a predator landscape using a case study of a single pronghorn in Yellowstone
+#behavioral ecology movement modeling in a predator landscape using a case study of pronghorn in Yellowstone
 ## ------------------------------------------------------------------------------------------
 #This work is sectioned out into:
 #Spatial data prep
