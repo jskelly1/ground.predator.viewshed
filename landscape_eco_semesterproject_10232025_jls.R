@@ -738,9 +738,8 @@ write.csv(a, "a.csv")
 #SECTION 4: Interpretation: Create graphs, maps, tables
 ## ------------------------------------------------------------------------------------------
 #moving on!
-#I'd like a graph of two locations and the viewshed from each location
-#And both GAM outputs
-#And AIC table
+#I'd like a graph of a location and the viewshed from each output
+#And AIC tables
 #Pairwise table of variables
 
 
