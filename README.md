@@ -6,6 +6,7 @@ Build viewsheds from digital surface model and digital terrain model to quantify
 
 
 
+![Untitled-1](https://github.com/user-attachments/assets/050c8372-c81a-4646-8f23-1ede740921d4)
 
 
 # Example usage with parellel and single core set up.
