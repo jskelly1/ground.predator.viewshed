@@ -838,11 +838,6 @@ writeVector(as.poly, output_file, overwrite=TRUE, filetype="KML")
 crop(dsm_yell)
 plot(as.poly)
 #========================================================
-token <- "7552632568:AAG_uHdDybt8SPx9ihaV_1y4j8-WOt-z4mg"
-chat_id <- "7726819829"
-message <- "Landscape Ecology Project Completed! "
-url <- paste0("https://api.telegram.org/bot", token, "/sendMessage?chat_id=", chat_id, "&text=", URLencode(message))
-httr::GET(url)
 #========================================================
 #Appendix
 #Adapt Merkle MoveTools function to work on a single core (this was run on a HPC)
